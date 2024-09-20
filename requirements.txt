@@ -5,3 +5,4 @@ lxml
 pandas
 numpy
 python-dotenv
+psycopg2
