@@ -1,11 +1,13 @@
 import requests
-from bs4 import BeautifulSoup
+import os
+
 import pandas as pd
 import numpy as np
+
 from sqlalchemy import URL, create_engine
-import os
 from dotenv import load_dotenv
 from pathlib import Path
+from bs4 import BeautifulSoup
 
 
 if __name__ == "__main__":
