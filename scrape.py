@@ -12,6 +12,8 @@ from bs4 import BeautifulSoup
 
 if __name__ == "__main__":
 
+    print("SCRAPING")
+    
     # Scrape Data from web
     r = requests.get("https://bagong.pagasa.dost.gov.ph/automated-weather-station/")
     soup = BeautifulSoup(r.text, "lxml")
@@ -78,3 +80,5 @@ if __name__ == "__main__":
 
     engine = create_engine(url=engine_url)
     df.to_sql(name="data", con=engine, if_exists="append", index=False)
+
+    print("JOB DONE")

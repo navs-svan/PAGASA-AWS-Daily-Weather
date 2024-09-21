@@ -1,0 +1,54 @@
+services:
+  pgdatabase:
+    image: postgres:14
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${DBUSER}
+      - POSTGRES_PASSWORD=${DBPASS}
+      - POSTGRES_DB=${DBNAME}
+    volumes:
+      - "./postgres_data:/var/lib/postgresql/data:rw"
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    networks:
+      - db_network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DBUSER} -d ${DBNAME}" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  pgadmin:
+    image: dpage/pgadmin4
+    env_file:
+      - .env
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    volumes:
+      - "./pgadmin:/var/lib/pgadmin:rw"
+    ports:
+      - "${PGADMIN_PORT}:80"
+    networks:
+      - db_network
+    user: root
+
+  scrape:
+    image: weather:scrape
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - db_network
+    depends_on:
+      pgdatabase:
+        condition: service_healthy
+        restart: true
+
+networks:
+  db_network:
+    name: db_network

@@ -6,3 +6,8 @@ pandas
 numpy
 python-dotenv
 psycopg2
+
+
+shapely
+geopandas
+geopy
