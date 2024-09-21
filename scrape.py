@@ -19,7 +19,7 @@ if __name__ == "__main__":
 
     # Extract Header values
     cols = site_table[0].select("th")
-    data_dict = {data.get_text(): [] for data in cols}
+    data_dict = {data.get_text().replace(" ", "_").lower(): [] for data in cols}
 
     # Extract Table values
     for row in site_table:
@@ -32,26 +32,26 @@ if __name__ == "__main__":
     df = pd.DataFrame(data=data_dict)
 
     # Remove the value's unit
-    for col in ("Temperature", "Humidity", "Wind Speed", "Precipitation"):
+    for col in ("temperature", "humidity", "wind_speed", "precipitation"):
         df[col] = df[col].apply(lambda value: value.split(" ")[0])
 
     # Replace missing values
     df.replace("--", np.nan, inplace=True)
 
     # Column data types
-    df["Last Updated"] = pd.to_datetime(
-        df["Last Updated"], format="%B %d, %Y, %I:%M %p"
+    df["last_updated"] = pd.to_datetime(
+        df["last_updated"], format="%B %d, %Y, %I:%M %p"
     )
 
     col_dtypes = {
-        "Site Name": str,
-        "Temperature": float,
-        "Humidity": float,
-        "Wind Speed": float,
-        "Wind Direction": str,
-        "Precipitation": float,
-        "Pressure": float,
-        "Solar Radiation": float,
+        "site_name": str,
+        "temperature": float,
+        "humidity": float,
+        "wind_speed": float,
+        "wind_direction": str,
+        "precipitation": float,
+        "pressure": float,
+        "solar_radiation": float,
     }
     df = df.astype(col_dtypes)
 
@@ -77,4 +77,4 @@ if __name__ == "__main__":
     )
 
     engine = create_engine(url=engine_url)
-    df.to_sql(name="data", con=engine, if_exists="append")
+    df.to_sql(name="data", con=engine, if_exists="append", index=False)
