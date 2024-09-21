@@ -2,3 +2,5 @@
 test.py
 .env
 notebook.ipynb
+pgadmin
+postgres_data
